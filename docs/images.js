@@ -65,7 +65,6 @@
 
   const ssImageUrl = `${bucketUrl}/large/31.jpeg`;
 
-  console.log('ssImageUrl', ssImageUrl);
   const tybroData = {images, ssImageUrl};
 
   if (typeof window !== 'undefined') {
