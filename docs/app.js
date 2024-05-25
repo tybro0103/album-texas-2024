@@ -29,6 +29,16 @@ const onChangeMql = () => {
 mqlMedium.addEventListener('change', onChangeMql);
 mqlSmall.addEventListener('change', onChangeMql);
 
+const debounce = (fn, ms) => {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      fn(...args);
+    }, ms);
+  };
+};
+
 const getRand = (min, max) => {
   const range = max - min;
   return Math.round((Math.random() * range)) + min;
@@ -181,11 +191,13 @@ const hijackLinks = () => {
   document.addEventListener('click', onClick);
 };
 
+const hideControls = debounce(() => {
+  controlsEl.classList.remove('open');
+}, 3000);
+
 const flashControls = () => {
   controlsEl.classList.add('open');
-  setTimeout(() => {
-    controlsEl.classList.remove('open');
-  }, 3000);
+  hideControls();
 };
 
 const showAlbum = () => {
@@ -198,6 +210,10 @@ const showSlideShow = () => {
   document.body.classList.add('show-ss');
   if (shown !== 'ss') flashControls();
   shown = 'ss';
+};
+
+const onMouseMove = () => {
+  flashControls();
 };
 
 const onTargetKeyChange = () => {
@@ -234,6 +250,10 @@ const listenForTargetChange = () => {
       onTargetKeyChange();
     }
   }, 50);
+};
+
+const listenForMouseMove = () => {
+  document.body.addEventListener('mousemove', onMouseMove);
 };
 
 const listenForRawClick = () => {
@@ -275,6 +295,7 @@ const onReady = () => {
   startRandomFlipping();
   listenForKeys();
   listenForTargetChange();
+  listenForMouseMove();
   // listenForRawClick();
   renderProgress();
 };
